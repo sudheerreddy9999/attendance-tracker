@@ -1,8 +1,7 @@
 import connectMongoDB from "../../../../libs/mongodb";
 import User from "@/models/users";
 import { generateToken } from "@/libs/auth";
-
-export const POST = async (req) => {
+export async function POST(req) {
   try {
     await connectMongoDB();
     const { email, password } = await req.json();
@@ -28,7 +27,7 @@ export const POST = async (req) => {
       );
     }
 
-    const token = generateToken(user._id,user.email,);
+    const token = generateToken(user._id,user.email, user.userType);
     return new Response(
       JSON.stringify({ message: "Login successful", token }),
       { status: 200 }

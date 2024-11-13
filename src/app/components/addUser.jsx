@@ -5,7 +5,6 @@ import Modal from "./modal";
 
 const AddUser = ({ handleClose, userData }) => {
   const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
   const [userType, setUserType] = useState("user");
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
@@ -16,7 +15,7 @@ const AddUser = ({ handleClose, userData }) => {
   const [section, setSection] = useState("");
   const [guardianName, setGuardianName] = useState("");
   const [guardianContact, setGuardianContact] = useState("");
-
+  const [buttonText, setButtonText] = useState("Save");
   const [loaderEnable, setLoaderEnable] = useState(false);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
@@ -24,12 +23,10 @@ const AddUser = ({ handleClose, userData }) => {
   const [modalMessage, setModalMessage] = useState(null);
 
   useEffect(() => {
-    console.log(userData," User data Value is ")
-    console.log(userData.email," dhhhhhhhhhhhhhhhhhhh")
-    console.log(userData._id,"jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj")
+    if(userData.length ==0) return ;
     if (userData) {
+      setButtonText("update")
       setEmail(userData.email || "");
-      setPassword(userData.password || "");
       setUserType(userData.userType || "user");
       setFirstName(userData.firstName || "");
       setLastName(userData.lastName || "");
@@ -41,7 +38,16 @@ const AddUser = ({ handleClose, userData }) => {
       setGuardianName(userData.guardian?.name || "");
       setGuardianContact(userData.guardian?.contact || "");
     }
-  }, [userData]); // Dependency on userData to update when it changes
+  }, [userData]);
+
+  useEffect(() => {
+    if (userData && userData.dob) {
+      const formattedDob = new Date(userData.dob).toISOString().split("T")[0];
+      setDob(formattedDob);
+    } else {
+      setDob("");
+    }
+  }, [userData]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -49,14 +55,12 @@ const AddUser = ({ handleClose, userData }) => {
     setLoading(true);
     const token = sessionStorage.getItem("authToken");
 
-    // Determine the URL and method (POST for new user, PUT for update)
-    const url = userData ? "/api/users/update" : "/api/auth/signup"; 
-    const method = userData ? "PUT" : "POST"; 
+    const url = buttonText =='update' ? "/api/users/update" : "/api/auth/signup"; 
+    const method = buttonText=='update' ? "PUT" : "POST"; 
 
     const payload = {
-      id: userData?._id,  // Include the user ID if updating
+      id: userData?._id,
       email,
-      password,
       userType,
       firstName,
       lastName,
@@ -67,8 +71,6 @@ const AddUser = ({ handleClose, userData }) => {
       section,
       guardian: { name: guardianName, contact: guardianContact },
     };
-
-    // Remove `id` from the payload if it's undefined (new user creation doesn't need it)
     if (!userData?._id) {
       delete payload.id;
     }
@@ -184,6 +186,15 @@ const AddUser = ({ handleClose, userData }) => {
               className="w-full p-2 border rounded"
             />
           </div>
+          <div className="mb-4">
+            <label className="block">Year</label>
+            <input
+              type="text"
+              value={year}
+              onChange={(e) => setYear(e.target.value)}
+              className="w-full p-2 border rounded"
+            />
+          </div>
 
           {/* Buttons */}
           <div className="col-span-2 flex justify-between gap-4">
@@ -191,7 +202,7 @@ const AddUser = ({ handleClose, userData }) => {
               type="submit"
               className="bg-green-500 text-white px-4 py-2 rounded-md w-full md:w-auto"
             >
-              {userData ? "Update" : "Save"}
+              {buttonText}
             </button>
             <button
               type="button"

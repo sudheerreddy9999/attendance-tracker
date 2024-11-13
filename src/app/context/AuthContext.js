@@ -8,6 +8,7 @@ const AuthContext = createContext();
 export const AuthProvider = ({ children }) => {
   const [token, setToken] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [userId, setUserToken] = useState(null);
   const router = useRouter();
 
   // Save token to sessionStorage and set auto logout
@@ -57,11 +58,14 @@ export const AuthProvider = ({ children }) => {
       
       try {
         const decodedToken = jwtDecode(storedToken);
-        
+        setUserToken(decodedToken.userId)
         // Redirect based on the decoded role (userType)
+        console.log(decodedToken)
         if (decodedToken.userType === "teacher") {
           router.push("/teacher");
-        } else {
+        } else if(decodedToken.userType === "user") {
+          router.push("/students");
+        }else {
           router.push("/auth/login");
         }
       } catch (err) {
@@ -73,7 +77,7 @@ export const AuthProvider = ({ children }) => {
   }, []);
 
   return (
-    <AuthContext.Provider value={{ saveToken, token, logout, loading }}>
+    <AuthContext.Provider value={{ saveToken, token, logout, loading,userId }}>
       {children}
     </AuthContext.Provider>
   );

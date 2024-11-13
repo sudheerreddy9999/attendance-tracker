@@ -4,8 +4,8 @@ import { useAuth } from "@/app/context/AuthContext";
 
 const Login = () => {
   const { saveToken } = useAuth();
-  const [email, setEmail] = useState("xyz7881@gmail.com");
-  const [password, setPassword] = useState("xyz@7881");
+  const [email, setEmail] = useState("sudheerjanga9999@gmail.com");
+  const [password, setPassword] = useState("sudheer@7881");
   const [userType, setUserType] = useState("user");
   const [error, setError] = useState("");
 

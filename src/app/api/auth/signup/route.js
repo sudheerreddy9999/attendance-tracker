@@ -1,12 +1,11 @@
 import connectMongoDB from "../../../../libs/mongodb";
 import User from "@/models/users";
 import { generateToken, verifyToken } from "@/libs/auth";
-
+import emailHelper from "@/app/utils/emailHelper";
 export async function POST(req) {
   try {
     const {
       email,
-      password,
       userType,
       firstName,
       lastName,
@@ -17,8 +16,19 @@ export async function POST(req) {
       section,
       guardian,
     } = await req.json();
-
-    // Validate required fields
+    function generatePassword(length = 8) {
+      const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%&?';
+      let password = '';
+      
+      for (let i = 0; i < length; i++) {
+          const randomIndex = Math.floor(Math.random() * characters.length);
+          password += characters[randomIndex];
+      }
+      
+      return password;
+  }
+  
+    const password =generatePassword()
     if (!email || !password || !firstName || !lastName || !enrollmentNumber || !year) {
       return new Response(
         JSON.stringify({ message: "Required fields are missing" }),
@@ -71,7 +81,8 @@ export async function POST(req) {
     await newUser.save();
 
     const newToken = generateToken(newUser._id, newUser.email, newUser.userType);
-
+    const body = emailHelper.userCreationTemplate(firstName,email,password);
+    emailHelper.sendEmail(email,"Student Account Creation",body);
     return new Response(
       JSON.stringify({ message: "User created", token: newToken }),
       { status: 201, headers: { "Content-Type": "application/json" } }

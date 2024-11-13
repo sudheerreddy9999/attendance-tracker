@@ -1,14 +1,13 @@
 "use client";
-import withRoleProtection from '../../utils/withRoleProtection';
-import AddUser from '../../components/AddUser';
-import { useEffect, useState } from 'react';
+import withRoleProtection from "../../utils/withRoleProtection";
+import AddUser from "../../components/AddUser";
+import { useEffect, useState } from "react";
 
 const ManageUsers = () => {
   const [addUser, setAddUser] = useState(false);
   const [studentData, setStudentData] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
-  const [selectedUser, setSelectedUser] = useState(null); // Track selected user for editing
-
+  const [selectedUser, setSelectedUser] = useState(null);
   useEffect(() => {
     const fetchUsers = async () => {
       const token = sessionStorage.getItem("authToken");
@@ -24,28 +23,34 @@ const ManageUsers = () => {
         console.error("Error fetching users:", error.message);
       }
     };
-    
+
     fetchUsers();
   }, []);
 
   // Filter users based on search term
-  const filteredUsers = studentData.filter(user =>
-    user.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    user.userType.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    (user.guardian && user.guardian.name.toLowerCase().includes(searchTerm.toLowerCase()))
+  const filteredUsers = studentData.filter(
+    (user) =>
+      user.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      user.userType.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      (user.guardian &&
+        user.guardian.name.toLowerCase().includes(searchTerm.toLowerCase()))
   );
 
   const handleEditClick = (user) => {
-    console.log(user," Inside the main component")
-    setSelectedUser(user); // Set selected user data for editing
-    setAddUser(true); // Open the AddUser form in edit mode
+    console.log(user, " Inside the main component");
+    setSelectedUser(user);
+    setAddUser(true);
   };
 
   return (
     <div>
       <div className="flex justify-between items-center">
-        <button onClick={() => setAddUser(true)} className='bg-slate-800 m-5 text-sm rounded-lg text-white px-3 py-2'>Add New User</button>
-        <button onClick={() => setAddUser(true)} className='bg-slate-800 m-5 rounded-lg text-white px-3 text-sm py-2'>Edit Users</button>
+        <button
+          onClick={() => handleEditClick([])}
+          className="bg-slate-800 m-5 text-sm rounded-lg text-white px-3 py-2"
+        >
+          Add New User
+        </button>
         <input
           type="text"
           placeholder="Search by email, user type, or guardian name"
@@ -54,27 +59,35 @@ const ManageUsers = () => {
           className="m-5 p-2 border rounded-lg"
         />
       </div>
-      
-      {addUser && <AddUser handleClose={() => setAddUser(false)} userData={selectedUser} />} {/* Pass selected user data for editing */}
-      
+
+      {addUser && (
+        <AddUser
+          handleClose={() => setAddUser(false)}
+          userData={selectedUser}
+        />
+      )}
+
       <table className="min-w-full bg-white border border-gray-300 mt-5">
         <thead>
           <tr className="text-left border-b">
-            <th className="p-3">Enrollment Number</th>
-            <th className="p-3">Email</th>
-            <th className="p-3">First Name</th>
-            <th className="p-3">Last Name</th>
-            <th className="p-3">Phone</th>
-            <th className="p-3">DOB</th>
-            <th className="p-3">Year</th>
-            <th className="p-3">Section</th>
-            <th className="p-3">Guardian Name</th>
-            <th className="p-3">Guardian Contact</th>
-            <th className="p-3">Actions</th> {/* Add a column for the Edit button */}
+            <>
+              <th className="p-3">Enrollment Number</th>
+              <th className="p-3">Email</th>
+              <th className="p-3">First Name</th>
+              <th className="p-3">Last Name</th>
+              <th className="p-3">Phone</th>
+              <th className="p-3">DOB</th>
+              <th className="p-3">Year</th>
+              <th className="p-3">Section</th>
+              <th className="p-3">Guardian Name</th>
+              <th className="p-3">Guardian Contact</th>
+              <th className="p-3">Actions</th>
+            </>
           </tr>
         </thead>
+
         <tbody>
-          {filteredUsers.map(user => (
+          {filteredUsers.map((user) => (
             <tr key={user._id} className="border-b hover:bg-gray-100">
               <td className="p-3">{user.enrollmentNumber}</td>
               <td className="p-3">{user.email}</td>
@@ -84,8 +97,8 @@ const ManageUsers = () => {
               <td className="p-3">{new Date(user.dob).toLocaleDateString()}</td>
               <td className="p-3">{user.year}</td>
               <td className="p-3">{user.section}</td>
-              <td className="p-3">{user.guardian?.name || 'N/A'}</td>
-              <td className="p-3">{user.guardian?.contact || 'N/A'}</td>
+              <td className="p-3">{user.guardian?.name || "N/A"}</td>
+              <td className="p-3">{user.guardian?.contact || "N/A"}</td>
               <td className="p-3">
                 <button
                   onClick={() => handleEditClick(user)} // Trigger edit on button click
@@ -98,7 +111,9 @@ const ManageUsers = () => {
           ))}
           {filteredUsers.length === 0 && (
             <tr>
-              <td colSpan="12" className="p-3 text-center text-gray-500">No users found</td>
+              <td colSpan="12" className="p-3 text-center text-gray-500">
+                No users found
+              </td>
             </tr>
           )}
         </tbody>
@@ -107,4 +122,4 @@ const ManageUsers = () => {
   );
 };
 
-export default withRoleProtection(ManageUsers, ['teacher', 'admin']);
+export default withRoleProtection(ManageUsers, ["teacher", "admin"]);

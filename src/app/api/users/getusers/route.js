@@ -1,6 +1,6 @@
 import connectMongoDB from "../../../../libs/mongodb";
 import User from "@/models/users";
-import { generateToken, verifyToken } from "@/libs/auth";
+import { verifyToken } from "@/libs/auth";
 
 export async function GET(req) {
   try {

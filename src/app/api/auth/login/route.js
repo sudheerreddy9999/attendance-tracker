@@ -27,7 +27,7 @@ export async function POST(req) {
       );
     }
 
-    const token = generateToken(user._id,user.email, user.userType);
+    const token = generateToken(user._id,user.email, user.userType,user.firstName);
     return new Response(
       JSON.stringify({ message: "Login successful", token }),
       { status: 200 }

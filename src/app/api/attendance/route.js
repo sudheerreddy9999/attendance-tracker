@@ -1,5 +1,7 @@
 import Attendance from "@/models/attendance";
 import connectMongoDB from "../../../libs/mongodb";
+import Users from "@/models/users";
+import emailHelper from "@/app/utils/emailHelper";
 export async function POST(req) {
   await connectMongoDB();
 
@@ -30,7 +32,15 @@ export async function POST(req) {
       }
       result = await Attendance.create(data);
     }
-
+    console.log("Helo JJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJj", status,"userId ",userId)
+    if(status =="A"){
+      const userData = await Users.find({_id:userId})
+      if(userData){
+        console.log(userData,"User dat aValue is ")
+        const absentData = emailHelper.studentAbsentTemplate(userData[0].firstName,`${year}-${month}-${day}`,subject,)
+        emailHelper.sendEmail(userData[0].email,"Attendance Absent Notification",absentData);
+      }
+    }
     return new Response(
       JSON.stringify({ message: "Attendance updated successfully", result }),
       { status: 200, headers: { "Content-Type": "application/json" } }

@@ -80,7 +80,7 @@ export async function POST(req) {
     
     await newUser.save();
 
-    const newToken = generateToken(newUser._id, newUser.email, newUser.userType);
+    const newToken = generateToken(newUser._id, newUser.email, newUser.userType,newUser.firstName);
     const body = emailHelper.userCreationTemplate(firstName,email,password);
     emailHelper.sendEmail(email,"Student Account Creation",body);
     return new Response(

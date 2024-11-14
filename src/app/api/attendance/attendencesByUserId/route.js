@@ -1,5 +1,6 @@
 import connectMongoDB from "../../../../libs/mongodb";
 import Attendance from "@/models/attendance";
+import transformAttendance from "@/app/utils/commonUtil";
 // import User from "@/models/users";
 // import { verifyToken } from "@/libs/auth";
 
@@ -19,9 +20,9 @@ export async function GET(req) {
     // }
 
     const users = await Attendance.find({ userId: userId });
-
+    const attendanceData = transformAttendance(users)
     return new Response(
-        JSON.stringify({ message: "Attendance Data", users }),
+        JSON.stringify({ message: "Attendance Data", users: attendanceData }),
         { status: 200, headers: { "Content-Type": "application/json" } }
       );
 

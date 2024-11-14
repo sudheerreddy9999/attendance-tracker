@@ -1,17 +1,22 @@
 "use client";
 import { useState } from "react";
 import { useAuth } from "@/app/context/AuthContext";
-
+import { jwtDecode } from "jwt-decode";
+import Loader from "@/app/components/loader";
+import Modal from "@/app/components/modal";
+import { useRouter } from "next/navigation";
 const Login = () => {
   const { saveToken } = useAuth();
   const [email, setEmail] = useState("sudheerjanga9999@gmail.com");
-  const [password, setPassword] = useState("sudheer@7881");
-  const [userType, setUserType] = useState("user");
-  const [error, setError] = useState("");
+  const [password, setPassword] = useState("sudheer@123");
+  const [message, setMessage] = useState("");
+  const [openLoader,setOpenLoader] = useState(false);
+  const [openModal,setOpenModal] = useState(false);
 
+  const router = useRouter();
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+    setOpenLoader(true);
     const response = await fetch("/api/auth/login", {
       method: "POST",
       headers: {
@@ -21,15 +26,24 @@ const Login = () => {
     });
 
     const data = await response.json();
-
+    setOpenLoader(false);
+    setOpenModal(true);
     if (response.ok) {
-      console.log(data.token);
       saveToken(data.token);
-      sessionStorage.setItem("authToken", data.token);
-      setError("");
-      alert("Login successful!");
+      const decodedToken = jwtDecode(data.token);
+      setMessage("Success !");
+      setTimeout(()=>{
+        if (decodedToken.userType === "teacher") {
+          router.push("/teacher");
+        } else if(decodedToken.userType === "user") {
+          router.push("/students");
+        }else {
+          router.push("/auth/login");
+        }
+      },2000)
     } else {
-      setError(data.message);
+
+      setMessage(data.message);
     }
   };
 
@@ -42,7 +56,6 @@ const Login = () => {
         <h2 className="text-3xl font-semibold text-center text-gray-800 mb-6">
           Login
         </h2>
-        {error && <p className="text-red-500 text-center mb-4">{error}</p>}
 
         <div className="mb-4">
           <label className="block text-gray-700 text-sm font-semibold mb-2">
@@ -71,6 +84,13 @@ const Login = () => {
             placeholder="Enter your password"
           />
         </div>
+        <div className="text-start text-sm text-gray-600">
+          <p>
+            <a href="/auth/reset-password" className="text-blue-500 hover:underline">
+              change password
+            </a>
+          </p>
+        </div>
 
         <button
           type="submit"
@@ -78,16 +98,9 @@ const Login = () => {
         >
           Login
         </button>
-
-        <div className="text-center text-sm text-gray-600">
-          <p>
-            Don&apos;t have an account?{" "}
-            <a href="/auth/signup" className="text-blue-500 hover:underline">
-              Sign Up
-            </a>
-          </p>
-        </div>
       </form>
+      {openLoader?<Loader/>:null}
+      {openModal ? <Modal modalMessage={message} handleClose={()=>setOpenModal(false)}/>:null}
     </div>
   );
 };

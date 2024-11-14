@@ -1,44 +1,54 @@
 "use client";
-import { usePathname } from 'next/navigation';
-import { useAuth } from '../context/AuthContext';
-import { useState, useEffect } from 'react';
-import { jwtDecode } from "jwt-decode";
+import { useAuth } from "../context/AuthContext";
+import { useState, useEffect, useRef } from "react";
+import {jwtDecode} from "jwt-decode";
+import Loader from "./loader";
 
 export const Navigation = () => {
-  const [userName, setUserName] = useState(null);
+  const [userName, setUserName] = useState("sudheer");
   const [typeOfUser, setTypeOfUser] = useState(null);
   const [showLogout, setShowLogout] = useState(false);
-  const pathName = usePathname();
   const { token, loading, logout } = useAuth();
+  const dropdownRef = useRef(null);
 
   useEffect(() => {
+    const token = sessionStorage.getItem("authToken");
+    console.log(token);
     if (token) {
       try {
+        console.log("Hello")
         const decodedToken = jwtDecode(token);
-        const extractedUserName = decodedToken.email.split('@')[0];
+        console.log(decodedToken," Hello 123123")
+        const extractedUserName =decodedToken.userName
         setUserName(extractedUserName);
         setTypeOfUser(decodedToken.userType);
       } catch (err) {
+        console.log(err)
         console.error("Error decoding token:", err.message);
       }
     }
-  }, [token]);
+  }, []);
 
-  if (loading) {
-    return <div>Loading...</div>;
+  // Close dropdown if clicking outside of it
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setShowLogout(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+  const handleLogout = ()=>{
+    setShowLogout(false);
+    logout();
   }
-
-  const navItems = [
-    { name: 'Home', href: '/' },
-    { name: 'About', href: '/about' },
-    { name: 'Services', href: '/services' },
-    { name: 'Contact', href: '/contact' },
-  ];
 
   return (
     <nav className="bg-gray-800 w-full text-white p-4 px-10">
       <div className="flex justify-between items-center">
-        {/* Logo */}
         <div className="text-xl font-bold">
           <img
             className="w-10 h-10 rounded-lg"
@@ -46,55 +56,37 @@ export const Navigation = () => {
             alt="Logo"
           />
         </div>
-
-        {/* Navigation Items */}
-        <ul className="flex space-x-6">
-          {navItems.map((item) => (
-            <li key={item.name}>
-              <a
-                href={item.href}
-                className={`px-3 py-2 rounded-md text-sm font-medium ${
-                  pathName === item.href
-                    ? 'bg-indigo-600 text-white'  // Active state
-                    : 'text-gray-300 hover:text-white'
-                }`}
-              >
-                {item.name}
-              </a>
-            </li>
-          ))}
-        </ul>
-
-        {/* User Profile and Logout Button */}
-        <div
-          className="ml-auto relative"
-          onMouseEnter={() => setShowLogout(true)}
-          onMouseLeave={() => setShowLogout(false)}
-        >
-          <div className="flex items-center space-x-2 cursor-pointer">
+        <div className="ml-auto relative" ref={dropdownRef}>
+          <div
+            className="flex items-center space-x-2 cursor-pointer"
+            onClick={() => setShowLogout((prev) => !prev)}
+          >
             <img
-              className="w-10 h-10 rounded-full"
+              className="w-10 h-10 rounded-full border border-gray-300"
               src={
                 typeOfUser === "teacher"
-                  ? "https://ideogram.ai/assets/progressive-image/balanced/response/ltcMB6U_To-wbc9q-xx7MQ"
-                  : "https://ideogram.ai/assets/progressive-image/balanced/response/9PLhbygCSuiR_bawgj6gKg"
+                  ? "https://images-platform.99static.com//aOgPj9qGuoh-2RfFUTokPRpKPbA=/31x132:739x840/fit-in/500x500/99designs-contests-attachments/94/94929/attachment_94929786"
+                  : "https://static.vecteezy.com/system/resources/previews/048/115/778/non_2x/teacher-mascot-logo-png.png"
               }
               alt="User"
             />
-            <div className="text-xs font-bold">{userName}</div>
           </div>
-
-          {/* Logout Button */}
           {showLogout && (
-            <button
-              onClick={logout}
-              className="absolute left-0 mt-2 w-full bg-red-500 text-white px-3 py-2 rounded-md text-sm hover:bg-red-600 z-10"
-            >
-              Logout
-            </button>
+            <div className="absolute right-0 mt-2 w-48 bg-white text-gray-800 rounded-lg shadow-lg py-2 z-10">
+              <div className="px-4 py-2 font-semibold border-b border-gray-200">
+                {userName}
+              </div>
+              <button
+                onClick={handleLogout}
+                className="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-gray-100"
+              >
+                Logout
+              </button>
+            </div>
           )}
         </div>
       </div>
+      {loading && <Loader />}
     </nav>
   );
 };

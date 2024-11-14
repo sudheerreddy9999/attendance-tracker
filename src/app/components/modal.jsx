@@ -1,6 +1,7 @@
 import React from "react";
+import { AiOutlineClose } from "react-icons/ai";
 
-const Modal = ({modalMessage,handleClose}) => {
+const Modal = ({ modalMessage, handleClose }) => {
   const handleCancel = () => {
     console.log("Cancel button clicked");
     handleClose();
@@ -13,10 +14,10 @@ const Modal = ({modalMessage,handleClose}) => {
           onClick={handleCancel}
           className="absolute top-2 right-2 text-xl text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white"
         >
-          X
+          <AiOutlineClose />
         </button>
         <div className="flex items-center justify-center">
-            <p className="text-medium">{modalMessage}</p>
+          <p className="text-medium font-bold">{modalMessage}</p>
         </div>
       </div>
     </div>

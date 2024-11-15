@@ -25,6 +25,7 @@ Ensure you have the following installed on your system:
 - Yarn or npm
 
 ## Installation
+- **npm install --legacy-peer-deps** To install graph dependency
 - **npm i** To install required packages
 - **npm run dev** To start server
 

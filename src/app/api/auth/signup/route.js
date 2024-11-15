@@ -46,7 +46,6 @@ export async function POST(req) {
         { status: 401, headers: { "Content-Type": "application/json" } }
       );
     }
-    console.log(authHeader," Auth Header Value is ")
     const token = authHeader.split(" ")[1];
     const verifiedToken = verifyToken(token);
     if (!verifiedToken) {

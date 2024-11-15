@@ -31,12 +31,10 @@ export async function POST(req) {
         attendance: { [year]: { [month]: { [day]: { [subject]: status } } } },
       }
       result = await Attendance.create(data);
-    }
-    console.log("Helo JJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJj", status,"userId ",userId)
+    })
     if(status =="A"){
       const userData = await Users.find({_id:userId})
       if(userData){
-        console.log(userData,"User dat aValue is ")
         const absentData = emailHelper.studentAbsentTemplate(userData[0].firstName,`${year}-${month}-${day}`,subject,)
         emailHelper.sendEmail(userData[0].email,"Attendance Absent Notification",absentData);
       }

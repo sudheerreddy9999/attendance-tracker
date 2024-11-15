@@ -7,7 +7,7 @@ const connectMongoDB = async () => {
       return;
     }
 
-    await mongoose.connect(process.env.MONGODB_URI, {
+    await mongoose.connect(process.env.MONGODB_URI|| "mongodb+srv://sudheerjanga9999:MIiVMJSjK7bgIfpv@cluster0.xfdw4.mongodb.net/tracker_db", {
       useNewUrlParser: true,
       useUnifiedTopology: true,
     });

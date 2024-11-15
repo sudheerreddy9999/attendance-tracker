@@ -71,7 +71,6 @@ const updateAttendance = () => {
   };
 
   const handleAttendanceChange = async (userId, date, subject, status) => {
-    console.log(status," Status Value is ")
     const dates = date.split("-");
     const year = dates[0];
     const monthNumber = dates[1];

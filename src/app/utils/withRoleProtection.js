@@ -9,7 +9,6 @@ const withRoleProtection = (WrappedComponent, allowedRoles) => {
     const router = useRouter();
 
     if (loading) {
-      console.log("Token is loading...");
       return <div>Loading...</div>;
     }
 
@@ -21,9 +20,7 @@ const withRoleProtection = (WrappedComponent, allowedRoles) => {
     let decodedToken;
     try {
       decodedToken = jwtDecode(token); 
-      console.log("Decoded Token is", decodedToken);
     } catch (error) {
-      console.log("Error decoding token");
       console.error("Error decoding token", error);
       router.push('/auth/login');
       return null;
@@ -31,7 +28,6 @@ const withRoleProtection = (WrappedComponent, allowedRoles) => {
 
     const userRole = decodedToken.userType;
     if (!allowedRoles.includes(userRole)) {
-      console.log("User role not allowed, redirecting to /not-authorized");
       router.push('/not-authorized');
       return null; 
     }

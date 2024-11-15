@@ -6,7 +6,6 @@ export default function Home() {
   const {userType} = useAuth();
   const router = useRouter();
   useEffect(()=>{
-    console.log(userType," UserTpe value is ")
     if (userType === "teacher") {
       router.push("/teacher");
     } else if(userType === "user") {

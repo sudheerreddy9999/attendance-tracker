@@ -13,17 +13,13 @@ export const Navigation = () => {
 
   useEffect(() => {
     const token = sessionStorage.getItem("authToken");
-    console.log(token);
     if (token) {
       try {
-        console.log("Hello")
         const decodedToken = jwtDecode(token);
-        console.log(decodedToken," Hello 123123")
         const extractedUserName =decodedToken.userName
         setUserName(extractedUserName);
         setTypeOfUser(decodedToken.userType);
       } catch (err) {
-        console.log(err)
         console.error("Error decoding token:", err.message);
       }
     }

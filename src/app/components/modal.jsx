@@ -3,7 +3,6 @@ import { AiOutlineClose } from "react-icons/ai";
 
 const Modal = ({ modalMessage, handleClose }) => {
   const handleCancel = () => {
-    console.log("Cancel button clicked");
     handleClose();
   };
 

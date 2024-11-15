@@ -1,36 +1,85 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Attendance Tracking System
 
-## Getting Started
+The **Attendance Tracking System** is a web application designed to track and manage student attendance. This system allows users to view attendance records, select specific dates, navigate through previous and next dates, and download attendance data in an Excel format.
 
-First, run the development server:
+## Features
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+- **View Attendance**: View attendance records by selecting specific dates.
+- **Manage students**: To add edit and manage their attendance
+- **Excel Export**: Download attendance records as an Excel file.
+- **Authentication**: Secure login with token-based authentication to ensure only authorized users can access data.
+  
+## Technologies Used
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+- **Frontend**: NextJs with Tailwind CSS
+- **Backend**: Nextjs NexJS APi Routes
+- **Database**: MongoDB
+- **Authentication**: Token-based authentication (JWT)
+- **Excel Export**: `XLSX` library for Excel file generation
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+### Prerequisites
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Ensure you have the following installed on your system:
+- Node.js
+- MongoDB (for database setup)
+- Yarn or npm
 
-## Learn More
+## Installation
+- **npm i** To install required packages
+- **npm run dev** To start server
 
-To learn more about Next.js, take a look at the following resources:
+### Steps
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+1. **Clone the Repository**
+    ```bash
+    git clone https://github.com/sudheerreddy9999/attendance-tracker.git
+    cd attendance-tracker
+    ```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+2. **Install Backend Dependencies**
+    ```bash
+    cd server
+    npm install
+    ```
 
-## Deploy on Vercel
+3. **Install Frontend Dependencies**
+    ```bash
+    cd ../client
+    npm install
+    ```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+
+4. **Start the Application**
+
+   - To start the backend server, run:
+     ```bash
+     cd server
+     npm start
+     ```
+
+   - To start the frontend, open another terminal window and run:
+     ```bash
+     cd client
+     npm start
+     ```
+
+5. **Access the Application**
+
+   Once both servers are running, you can access the application in your browser at `http://localhost:3000`.
+
+## Usage
+
+1. **Login**: Authenticate with your credentials to gain access.
+2. **View Attendance**: View attendance data for the selected date.
+3. **Navigation**: Use the previous and next buttons to move through dates.
+4. **Download as Excel**: Click the "Download Attendance as Excel" button to export attendance data for the selected date.
+
+
+## Login details
+1. Teacher : 
+   username : sudheerjanga9999@gmail.com
+   password : Sudheer@123
+  
+2 . username : reddyjlokesh1@gmail.com
+    password : Hari@7881 
